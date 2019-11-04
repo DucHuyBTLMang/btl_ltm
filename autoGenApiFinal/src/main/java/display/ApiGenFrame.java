@@ -10,13 +10,33 @@ import static bussiness.ApiGen.genApiGet;
 import static bussiness.ApiGen.genApiInsert;
 import static bussiness.ApiGen.genApiUpdate;
 import static bussiness.ApiGen.genMain;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
+import java.awt.Dimension;
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.nio.file.Paths;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.lang.model.element.Modifier;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import org.json.simple.parser.ParseException;
+import utils.DataAccess;
 import static utils.MongoUtils.getMongoClient;
 
 /**
  *
- * @author 
+ * @author
  */
 public class ApiGenFrame extends javax.swing.JFrame {
 
@@ -144,11 +164,20 @@ public class ApiGenFrame extends javax.swing.JFrame {
     private String objName = "";
 
     private void objectNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objectNameActionPerformed
-        objName = objectName.getText();
     }//GEN-LAST:event_objectNameActionPerformed
 
     private void genAPIButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genAPIButtonActionPerformed
-        MongoClient mongoClient = getMongoClient();
+        objName = objectName.getText();
+        if (objName.equals("")) {
+            JOptionPane.showMessageDialog(null, "Name of object empty!");
+            return;
+        }
+        MongoClient mongoClient = null;
+        try {
+            mongoClient = getMongoClient();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ApiGenFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
         DB db = mongoClient.getDB("api_test");
 
         try {
@@ -172,19 +201,85 @@ public class ApiGenFrame extends javax.swing.JFrame {
                     .addStaticImport(ClassName.get("spark", "Spark"), "*")
                     .addStaticImport(ClassName.get("utils", "JsonUtil"), "*")
                     .build();
-            javaFile1.writeTo(System.out);
-            javaFile1.writeTo(Paths.get("./src/main/java"));
+            JOptionPane.showMessageDialog(null, "GEN API SUCCESS!");
+
+            try {
+                if (sampleJSON.getText().equals("")) {
+                    JOptionPane.showMessageDialog(null, "Sample JSON empty!");
+                    return;
+                }
+                DataAccess.initInfo(sampleJSON.getText(), objName);
+            } catch (ParseException ex) {
+                Logger.getLogger(ApiGenFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(ApiGenFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                javaFile1.writeTo(System.out);
+                javaFile1.writeTo(Paths.get("./src/main/java"));
+            } catch (IOException ex) {
+                Logger.getLogger(ApiGenFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_genAPIButtonActionPerformed
 
-   
-        
-    private void instructionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_instructionButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_instructionButtonActionPerformed
-
     private void deployAPIButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deployAPIButtonActionPerformed
-        Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"set path=%path%;C:\\apache-maven-3.6.2\\bin && mvn compile && mvn install && mvn exec:java -Dexec.mainClass=storeApi.GenApiFinal\"");
+        try {
+            Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"set path=%path%;C:\\apache-maven-3.6.2\\bin && mvn compile && mvn install && mvn exec:java -Dexec.mainClass=storeApi.GenApiFinal\"");
+        } catch (IOException ex) {
+            Logger.getLogger(ApiGenFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_deployAPIButtonActionPerformed
+
+    private void instructionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_instructionButtonActionPerformed
+        JFrame p = new JFrame();
+        objName = objectName.getText();
+        System.out.println(objName);
+        JTextArea textGet = new JTextArea();
+        String text = String.format("---------------------------------------------------------\n"
+                + "API GET DATA: http://localhost:4567/getInfo%s\n"
+                + "VD params:\n"
+                + "{\n"
+                + "	\"color\": \"red\",\n"
+                + "	\"name\": \"Toyota\"\n"
+                + "}"
+                + "\n---------------------------------------------------------\n"
+                + "API INSERT DATA: http://localhost:4567/insertInfo%s\n"
+                + "{\n"
+                + "	\"name\":\"Audi\",\n"
+                + "	\"color\":\"white\",\n"
+                + "	\"price\":\"1000$\"\n"
+                + "}"
+                + "\n---------------------------------------------------------\n"
+                + "API UPDATE DATA: http://localhost:4567/updateInfo%s\n"
+                + "{\n"
+                + "	\"query\":{\n"
+                + "		\"name\": \"BMW\"\n"
+                + "	},\n"
+                + "	\"values\":{\n"
+                + "		\"color\": \"Blue\"\n"
+                + "	}\n"
+                + "}"
+                + "\n---------------------------------------------------------\n"
+                + "API DELETE DATA: http://localhost:4567/deleteInfo%s\n"
+                + "{\n"
+                + "	\"query\":{\n"
+                + "		\"name\": \"BMW\"\n"
+                + "	}\n"
+                + "}",
+                objName,
+                objName,
+                objName,
+                objName
+        );
+        textGet.setText(text);
+
+        p.add(textGet);
+
+        p.setSize(new Dimension(400, 600));
+        p.setVisible(true);
+    }//GEN-LAST:event_instructionButtonActionPerformed
 
     /**
      * @param args the command line arguments
