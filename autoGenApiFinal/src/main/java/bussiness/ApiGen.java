@@ -40,7 +40,7 @@ import static utils.MongoUtils.getMongoClient;
  * @author NguyenDuc
  */
 public class ApiGen {
-    
+
     public static MethodSpec genApiGet(String objectName) {
         ClassName arrayList = ClassName.get("com.mongodb", "MongoClient");
         return MethodSpec.methodBuilder("apiGet" + objectName)

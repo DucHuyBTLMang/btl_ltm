@@ -35,17 +35,16 @@ public class main {
         try {
             // Get text qua phan Object name
             String objName = "Employee";
-            
+
             // tuong ung voi Button GEN API
             MongoClient mongoClient = getMongoClient();
             DB db = mongoClient.getDB("api_test");
-            
-            try{
-                DBCollection collection = db.createCollection(objName,new BasicDBObject());
-            }catch (Exception e){
+
+            try {
+                DBCollection collection = db.createCollection(objName, new BasicDBObject());
+            } catch (Exception e) {
                 System.out.println("database is created");
-            }
-            finally{
+            } finally {
                 TypeSpec genApiCrud = TypeSpec.classBuilder("GenApiFinal")
                         .addModifiers(Modifier.PUBLIC)
                         .addMethod(genApiGet(objName))
@@ -64,7 +63,7 @@ public class main {
                         .build();
                 javaFile1.writeTo(System.out);
                 javaFile1.writeTo(Paths.get("./src/main/java"));
-                
+
                 // tuong ung voi Button DEPLOY API
                 Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"set path=%path%;C:\\apache-maven-3.6.2\\bin && mvn compile && mvn install && mvn exec:java -Dexec.mainClass=storeApi.GenApiFinal\"");
                 System.out.println("**********");

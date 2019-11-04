@@ -21,7 +21,7 @@ public class MongoUtils {
 
     private static final String HOST = "localhost";
     private static final int PORT = 27017;
-    
+
     public static MongoClient getMongoClient() throws UnknownHostException {
         MongoClient mongoClient = new MongoClient(HOST, PORT);
         return mongoClient;

@@ -43,13 +43,13 @@
                       </Group>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="jButton3" pref="131" max="32767" attributes="0"/>
+                              <Component id="instructionButton" pref="131" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-                              <Component id="jButton1" min="-2" pref="146" max="-2" attributes="0"/>
+                              <Component id="genAPIButton" min="-2" pref="146" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
-                              <Component id="jButton2" min="-2" pref="135" max="-2" attributes="0"/>
+                              <Component id="deployAPIButton" min="-2" pref="135" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jTextField1" max="32767" attributes="0"/>
+                          <Component id="objectName" max="32767" attributes="0"/>
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -65,7 +65,7 @@
               <Component id="jLabel1" min="-2" pref="86" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTextField1" min="-2" pref="39" max="-2" attributes="0"/>
+                  <Component id="objectName" min="-2" pref="39" max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
@@ -75,9 +75,9 @@
               </Group>
               <EmptySpace pref="57" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jButton2" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
-                  <Component id="jButton1" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
-                  <Component id="jButton3" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
+                  <Component id="deployAPIButton" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
+                  <Component id="genAPIButton" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
+                  <Component id="instructionButton" alignment="3" min="-2" pref="45" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
           </Group>
@@ -101,9 +101,9 @@
         <Property name="text" type="java.lang.String" value="Object name:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField1">
+    <Component class="javax.swing.JTextField" name="objectName">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextField1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="objectNameActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
@@ -121,7 +121,7 @@
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
       <SubComponents>
-        <Component class="javax.swing.JTextArea" name="jTextArea1">
+        <Component class="javax.swing.JTextArea" name="sampleJSON">
           <Properties>
             <Property name="columns" type="int" value="20"/>
             <Property name="rows" type="int" value="5"/>
@@ -129,25 +129,28 @@
         </Component>
       </SubComponents>
     </Container>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="genAPIButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="GEN API"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="genAPIButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton2">
+    <Component class="javax.swing.JButton" name="deployAPIButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="DEPLOY API"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="deployAPIButtonActionPerformed"/>
+      </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton3">
+    <Component class="javax.swing.JButton" name="instructionButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="INSTRUCTION"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="instructionButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

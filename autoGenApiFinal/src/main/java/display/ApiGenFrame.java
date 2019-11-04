@@ -5,9 +5,18 @@
  */
 package display;
 
+import static bussiness.ApiGen.genApiDelete;
+import static bussiness.ApiGen.genApiGet;
+import static bussiness.ApiGen.genApiInsert;
+import static bussiness.ApiGen.genApiUpdate;
+import static bussiness.ApiGen.genMain;
+import java.nio.file.Paths;
+import javax.lang.model.element.Modifier;
+import static utils.MongoUtils.getMongoClient;
+
 /**
  *
- * @author NguyenDuc
+ * @author 
  */
 public class ApiGenFrame extends javax.swing.JFrame {
 
@@ -29,13 +38,13 @@ public class ApiGenFrame extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        objectName = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        sampleJSON = new javax.swing.JTextArea();
+        genAPIButton = new javax.swing.JButton();
+        deployAPIButton = new javax.swing.JButton();
+        instructionButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -45,32 +54,37 @@ public class ApiGenFrame extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel2.setText("Object name:");
 
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        objectName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                objectNameActionPerformed(evt);
             }
         });
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
         jLabel3.setText("Sample JSON:");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        sampleJSON.setColumns(20);
+        sampleJSON.setRows(5);
+        jScrollPane1.setViewportView(sampleJSON);
 
-        jButton1.setText("GEN API");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        genAPIButton.setText("GEN API");
+        genAPIButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                genAPIButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("DEPLOY API");
-
-        jButton3.setText("INSTRUCTION");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        deployAPIButton.setText("DEPLOY API");
+        deployAPIButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                deployAPIButtonActionPerformed(evt);
+            }
+        });
+
+        instructionButton.setText("INSTRUCTION");
+        instructionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                instructionButtonActionPerformed(evt);
             }
         });
 
@@ -94,12 +108,12 @@ public class ApiGenFrame extends javax.swing.JFrame {
                                 .addGap(20, 20, 20)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                                .addComponent(instructionButton, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                                 .addGap(32, 32, 32)
-                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(genAPIButton, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(34, 34, 34)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jTextField1)
+                                .addComponent(deployAPIButton, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(objectName)
                             .addComponent(jScrollPane1))))
                 .addContainerGap(44, Short.MAX_VALUE))
         );
@@ -110,7 +124,7 @@ public class ApiGenFrame extends javax.swing.JFrame {
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(31, 31, 31)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(objectName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(32, 32, 32)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -118,26 +132,59 @@ public class ApiGenFrame extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(deployAPIButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(genAPIButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(instructionButton, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(37, 37, 37))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    private String objName = "";
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void objectNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_objectNameActionPerformed
+        objName = objectName.getText();
+    }//GEN-LAST:event_objectNameActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void genAPIButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_genAPIButtonActionPerformed
+        MongoClient mongoClient = getMongoClient();
+        DB db = mongoClient.getDB("api_test");
+
+        try {
+            DBCollection collection = db.createCollection(objName, new BasicDBObject());
+        } catch (Exception e) {
+            System.out.println("database is created");
+        } finally {
+            TypeSpec genApiCrud = TypeSpec.classBuilder("GenApiFinal")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addMethod(genApiGet(objName))
+                    .addMethod(genApiInsert(objName))
+                    .addMethod(genApiUpdate(objName))
+                    .addMethod(genApiDelete(objName))
+                    .addMethod(genMain(objName))
+                    .build();
+
+            ClassName MongoUtils = ClassName.get("utils", "MongoUtils");
+
+            JavaFile javaFile1 = JavaFile.builder("storeApi", genApiCrud)
+                    .addStaticImport(MongoUtils, "getMongoClient")
+                    .addStaticImport(ClassName.get("spark", "Spark"), "*")
+                    .addStaticImport(ClassName.get("utils", "JsonUtil"), "*")
+                    .build();
+            javaFile1.writeTo(System.out);
+            javaFile1.writeTo(Paths.get("./src/main/java"));
+    }//GEN-LAST:event_genAPIButtonActionPerformed
+
+   
+        
+    private void instructionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_instructionButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_instructionButtonActionPerformed
+
+    private void deployAPIButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deployAPIButtonActionPerformed
+        Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"set path=%path%;C:\\apache-maven-3.6.2\\bin && mvn compile && mvn install && mvn exec:java -Dexec.mainClass=storeApi.GenApiFinal\"");
+    }//GEN-LAST:event_deployAPIButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -175,14 +222,14 @@ public class ApiGenFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton deployAPIButton;
+    private javax.swing.JButton genAPIButton;
+    private javax.swing.JButton instructionButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField objectName;
+    private javax.swing.JTextArea sampleJSON;
     // End of variables declaration//GEN-END:variables
 }
